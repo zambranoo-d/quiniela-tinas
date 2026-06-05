@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quiniela Tinas Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --verde:#2d6a1f;--verde-claro:#3d8a28;--verde-brillante:#4eaa32;
+  --rojo:#b01020;--rojo-claro:#d42030;
+  --fondo:#f5f5f0;--blanco:#ffffff;--texto:#1a2010;--texto-medio:#3a5028;--texto-suave:#7a9060;
+  --borde:#c8ddb8;--borde-suave:#e0ecd4;
+  --panel:#ffffff;--panel-alt:#f0f5ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Rajdhani',sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(45,106,31,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(45,106,31,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* HEADER */
+.site-header{position:relative;z-index:10;background:var(--blanco);border-bottom:1px solid var(--borde);box-shadow:0 2px 12px rgba(45,106,31,0.1);}
+.header-top{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 20px 10px;flex-wrap:wrap;}
+.logo-wrap{width:72px;height:72px;border:2px solid var(--borde);border-radius:6px;padding:5px;background:#ffffff;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-shrink:0;}
+.logo-wrap img{width:100%;height:100%;object-fit:contain;}
+.title-block{text-align:center;}
+.title-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,5.5vw,60px);letter-spacing:4px;line-height:1;color:var(--verde);text-shadow:1px 1px 0 rgba(45,106,31,0.15);}
+.title-sub{font-family:'Share Tech Mono',monospace;font-size:clamp(10px,1.8vw,13px);color:var(--verde-claro);letter-spacing:5px;text-transform:uppercase;margin-top:3px;}
+
+/* BANDERA: verde | blanco (con escudo SVG) | rojo */
+.bandera{display:grid;grid-template-columns:1fr 1.2fr 1fr;height:10px;}
+.b-verde{background:#006847;}
+.b-blanco{background:#ffffff;display:flex;align-items:center;justify-content:center;}
+.b-rojo{background:#ce1126;}
+.escudo-wrap{display:flex;align-items:center;justify-content:center;height:32px;margin:-11px 0;z-index:2;position:relative;}
+
+/* APP */
+.app-wrap{position:relative;z-index:5;max-width:780px;margin:0 auto;padding:20px 16px 40px;}
+.screen{display:none;}
+.screen.active{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* PANEL */
+.panel{background:var(--panel);border:1px solid var(--borde);border-radius:6px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#006847,#ffffff,#ce1126);}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--verde);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.panel-title::before{content:'';display:inline-block;width:4px;height:18px;background:var(--verde-claro);border-radius:2px;}
+
+/* FORMS */
+label{display:block;font-size:12px;letter-spacing:2px;color:var(--verde-claro);text-transform:uppercase;margin-bottom:4px;font-family:'Share Tech Mono',monospace;}
+input[type=text],input[type=password]{width:100%;background:#fff;border:1px solid var(--borde);border-radius:4px;color:var(--texto);font-family:'Rajdhani',sans-serif;font-size:16px;padding:10px 14px;margin-bottom:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+input:focus{border-color:var(--verde-claro);box-shadow:0 0 0 3px rgba(61,138,40,0.12);}
+.err{font-size:12px;color:var(--rojo-claro);margin-bottom:10px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:2px;text-transform:uppercase;padding:10px 22px;border-radius:4px;border:none;cursor:pointer;transition:all 0.15s;}
+.btn-verde{background:var(--verde-claro);color:#fff;}.btn-verde:hover{background:var(--verde-brillante);box-shadow:0 3px 10px rgba(61,138,40,0.3);}
+.btn-rojo{background:var(--rojo);color:#fff;}.btn-rojo:hover{background:var(--rojo-claro);}
+.btn-ghost{background:transparent;border:1px solid var(--borde);color:var(--verde-claro);}.btn-ghost:hover{background:var(--panel-alt);border-color:var(--verde-claro);}
+.btn-sm{font-size:12px;padding:5px 12px;letter-spacing:1px;}
+.btn-full{width:100%;justify-content:center;margin-top:10px;}
+.btn-link{background:none;border:none;color:var(--verde-claro);font-family:'Share Tech Mono',monospace;font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 0;}
+.btn-link:hover{color:var(--verde);}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
+/* TABS */
+.tab-bar{display:flex;gap:2px;margin-bottom:16px;border-bottom:2px solid var(--borde-suave);overflow-x:auto;}
+.tab{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;padding:8px 18px;border:none;background:transparent;color:var(--texto-suave);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all 0.15s;}
+.tab:hover{color:var(--verde-claro);}
+.tab.active{color:var(--verde);border-bottom:3px solid var(--verde);background:rgba(45,106,31,0.04);}
+
+/* MATCHES */
+.match-row{display:grid;grid-template-columns:1fr 36px 1fr auto;align-items:center;gap:6px;padding:8px 4px;border-bottom:1px solid var(--borde-suave);font-size:14px;}
+.match-row:last-of-type{border-bottom:none;}
+.t-local{text-align:right;font-weight:600;color:var(--texto);}
+.t-vs{text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--texto-suave);}
+.t-visit{font-weight:600;color:var(--texto);}
+.bet-btns{display:flex;gap:3px;}
+.bet-btn{font-size:11px;font-weight:700;padding:4px 9px;border-radius:3px;border:1px solid var(--borde);background:#fff;cursor:pointer;color:var(--texto-suave);font-family:'Share Tech Mono',monospace;transition:all 0.1s;}
+.bet-btn:hover{border-color:var(--verde-claro);color:var(--verde-claro);background:var(--panel-alt);}
+.bet-btn.sel-L{background:#e8f0ff;border-color:#4a80d0;color:#2a5aaa;}
+.bet-btn.sel-E{background:#fff8e0;border-color:#c8960a;color:#8a6400;}
+.bet-btn.sel-V{background:#ffe8e8;border-color:#c03030;color:#8a1010;}
+.result-display{display:flex;gap:5px;align-items:center;}
+
+/* PILLS */
+.pill{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 7px;border-radius:3px;font-weight:700;letter-spacing:1px;}
+.pill-L{background:#e8f0ff;border:1px solid #4a80d0;color:#2a5aaa;}
+.pill-E{background:#fff8e0;border:1px solid #c8960a;color:#8a6400;}
+.pill-V{background:#ffe8e8;border:1px solid #c03030;color:#8a1010;}
+.pill-ok{background:#e6f4e0;border:1px solid var(--verde-claro);color:var(--verde);}
+.pill-miss{background:#f0f0f0;border:1px solid #ccc;color:#888;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.stat-box{background:var(--panel-alt);border:1px solid var(--borde);border-radius:6px;padding:12px 8px;text-align:center;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--verde);line-height:1;}
+.stat-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--texto-suave);letter-spacing:1px;margin-top:3px;}
+
+/* RANKING */
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid var(--borde-suave);}
+.rank-row:last-child{border-bottom:none;}
+.rank-pos{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--texto-suave);width:24px;text-align:center;flex-shrink:0;}
+.rank-name{flex:1;font-weight:600;font-size:16px;color:var(--texto);}
+.rank-pts{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--verde);letter-spacing:1px;}
+.rank-me{background:rgba(45,106,31,0.06);border-left:3px solid var(--verde-claro);padding-left:5px;border-radius:0 4px 4px 0;}
+
+/* NAV */
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.nav-user{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--texto-suave);letter-spacing:1px;}
+.nav-user span{color:var(--verde);font-weight:700;}
+.divider{border:none;border-top:1px solid var(--borde-suave);margin:14px 0;}
+.admin-tag{display:inline-block;background:#fff0f0;border:1px solid var(--rojo);color:var(--rojo-claro);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:2px 8px;border-radius:3px;margin-bottom:12px;}
+.locked-notice{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--rojo);background:#fff0f0;border:1px solid #f0b0b0;border-radius:3px;padding:7px 12px;margin-bottom:10px;letter-spacing:1px;}
+.saved-msg{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--verde);text-align:center;margin-top:8px;height:18px;}
+.part-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--borde-suave);}
+.part-row:last-child{border-bottom:none;}
+.part-name{flex:1;font-weight:600;color:var(--texto);}
+.part-info{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--texto-suave);}
+
+/* PICKS DETAIL */
+.picks-detail{background:var(--panel-alt);border:1px solid var(--borde-suave);border-radius:4px;margin-top:8px;padding:10px 12px;display:none;}
+.picks-detail.open{display:block;}
+.user-toggle{font-family:'Share Tech Mono',monospace;font-size:11px;background:#fff;border:1px solid var(--borde);color:var(--texto-suave);border-radius:3px;padding:3px 10px;cursor:pointer;letter-spacing:1px;transition:all 0.1s;}
+.user-toggle:hover{border-color:var(--verde-claro);color:var(--verde-claro);}
+.user-toggle.open{border-color:var(--verde);color:var(--verde);background:var(--panel-alt);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--fondo);}
+::-webkit-scrollbar-thumb{background:var(--borde);border-radius:2px;}
+.footer{text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--texto-suave);letter-spacing:2px;padding:20px 0 8px;}
+@media(max-width:500px){.stats-grid{grid-template-columns:1fr 1fr 1fr;}.stat-val{font-size:24px;}.match-row{font-size:12px;}.panel{padding:14px 10px;}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo-wrap"><img src="logo.png" alt="Tinas"/></div>
+    <div class="title-block">
+      <div class="title-main">Quiniela Tinas Mundial 2026</div>
+      <div class="title-sub">⚽ Copa del Mundo · 72 partidos · Fase de grupos</div>
+    </div>
+    <div class="logo-wrap"><img src="logo.png" alt="Tinas"/></div>
+  </div>
+  <!-- Bandera de México con escudo -->
+  <div style="display:grid;grid-template-columns:1fr 1.15fr 1fr;height:14px;position:relative;">
+    <div style="background:#006847;"></div>
+    <div style="background:#ffffff;display:flex;align-items:center;justify-content:center;">
+      <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" style="height:36px;margin-top:-11px;z-index:2;position:relative;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15))">
+        <!-- Escudo simplificado de México -->
+        <ellipse cx="50" cy="32" rx="18" ry="22" fill="#c8a84b" opacity="0.3"/>
+        <!-- Águila cuerpo -->
+        <ellipse cx="50" cy="34" rx="9" ry="11" fill="#5a3e1b"/>
+        <!-- Cabeza -->
+        <circle cx="50" cy="22" r="6" fill="#5a3e1b"/>
+        <!-- Pico -->
+        <polygon points="50,25 54,28 50,26" fill="#c8a84b"/>
+        <!-- Ala izquierda -->
+        <ellipse cx="36" cy="30" rx="10" ry="5" fill="#5a3e1b" transform="rotate(-20,36,30)"/>
+        <!-- Ala derecha -->
+        <ellipse cx="64" cy="30" rx="10" ry="5" fill="#5a3e1b" transform="rotate(20,64,30)"/>
+        <!-- Serpiente -->
+        <path d="M54 25 Q60 20 62 24 Q64 28 58 28" stroke="#2d7a20" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Nopal / rama -->
+        <line x1="50" y1="44" x2="50" y2="52" stroke="#2d7a20" stroke-width="2.5"/>
+        <ellipse cx="44" cy="48" rx="5" ry="7" fill="#2d7a20" transform="rotate(-15,44,48)"/>
+        <ellipse cx="56" cy="48" rx="5" ry="7" fill="#2d7a20" transform="rotate(15,56,48)"/>
+        <!-- Tuna roja -->
+        <circle cx="44" cy="42" r="3" fill="#c0392b"/>
+        <circle cx="56" cy="42" r="3" fill="#c0392b"/>
+      </svg>
+    </div>
+    <div style="background:#ce1126;"></div>
+  </div>
+</header>
+
+<div class="app-wrap">
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="panel" style="max-width:400px;margin:30px auto;">
+    <div class="panel-title">Acceso</div>
+    <label>Tu nombre</label>
+    <input type="text" id="login-name" placeholder="Ej: Juan García" autocomplete="username"/>
+    <label>Contraseña</label>
+    <input type="password" id="login-pass" placeholder="Tu contraseña" autocomplete="current-password"/>
+    <div class="err" id="login-err"></div>
+    <div class="btn-row">
+      <button class="btn btn-verde" onclick="doLogin()">▶ Entrar</button>
+      <button class="btn btn-ghost" onclick="show('screen-register')">Registrarse</button>
+    </div>
+    <hr class="divider"/>
+    <button class="btn-link" onclick="show('screen-admin-login')">⚙ Acceso administrador</button>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="screen-register" class="screen">
+  <div class="panel" style="max-width:400px;margin:30px auto;">
+    <div class="panel-title">Registro</div>
+    <label>Tu nombre completo</label>
+    <input type="text" id="reg-name" placeholder="Ej: María López" autocomplete="username"/>
+    <label>Contraseña</label>
+    <input type="password" id="reg-pass" placeholder="Elige una contraseña" autocomplete="new-password"/>
+    <label>Confirmar contraseña</label>
+    <input type="password" id="reg-pass2" placeholder="Repite la contraseña" autocomplete="new-password"/>
+    <div class="err" id="reg-err"></div>
+    <div class="btn-row">
+      <button class="btn btn-verde" onclick="doRegister()">▶ Crear cuenta</button>
+      <button class="btn btn-ghost" onclick="show('screen-login')">← Regresar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="screen-admin-login" class="screen">
+  <div class="panel" style="max-width:400px;margin:30px auto;">
+    <div class="panel-title">Admin</div>
+    <div class="admin-tag">ACCESO RESTRINGIDO</div>
+    <label>Contraseña de administrador</label>
+    <input type="password" id="admin-pass" placeholder="Contraseña admin"/>
+    <div class="err" id="admin-err"></div>
+    <div class="btn-row">
+      <button class="btn btn-rojo" onclick="doAdminLogin()">▶ Entrar</button>
+      <button class="btn btn-ghost" onclick="show('screen-login')">← Regresar</button>
+    </div>
+  </div>
+</div>
+
+<!-- USER SCREEN -->
+<div id="screen-user" class="screen">
+  <div class="top-nav">
+    <div class="nav-user">Usuario: <span id="user-welcome"></span></div>
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()">Salir ×</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="userTab('picks')">Mis picks</button>
+    <button class="tab" onclick="userTab('puntos')">Mis puntos</button>
+    <button class="tab" onclick="userTab('ranking')">Ranking</button>
+  </div>
+  <div id="user-tab-picks"><div id="user-picks-content"></div></div>
+  <div id="user-tab-puntos" style="display:none;"><div id="user-puntos-content"></div></div>
+  <div id="user-tab-ranking" style="display:none;"><div id="user-ranking-content"></div></div>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div id="screen-admin" class="screen">
+  <div class="top-nav">
+    <div class="nav-user"><span style="color:var(--rojo-claro)">⚙ ADMINISTRADOR</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()">Salir ×</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="adminTab('results')">Resultados</button>
+    <button class="tab" onclick="adminTab('participants')">Participantes</button>
+    <button class="tab" onclick="adminTab('ranking')">Ranking</button>
+  </div>
+  <div id="admin-tab-results"><div id="admin-results-content"></div></div>
+  <div id="admin-tab-participants" style="display:none;"><div id="admin-participants-content"></div></div>
+  <div id="admin-tab-ranking" style="display:none;"><div id="admin-ranking-content"></div></div>
+</div>
+
+</div>
+<div class="footer" style="color:var(--texto-suave);">QUINIELA TINAS · MUNDIAL 2026 · 🇲🇽 HECHO EN MÉXICO</div>
+
+<script>
+const ADMIN_PASS='admin2026';
+
+const MATCHES=[
+  ['México','Sudáfrica'],['Corea del Sur','Chequia'],['Canadá','Bosnia y Herzegovina'],['Qatar','Suiza'],
+  ['Brasil','Marruecos'],['Haití','Escocia'],['Estados Unidos','Paraguay'],['Australia','Turquía'],
+  ['Alemania','Curazao'],['Costa de Marfil','Ecuador'],['Países Bajos','Japón'],['Suecia','Túnez'],
+  ['Bélgica','Egipto'],['Irán','Nueva Zelanda'],['España','Cabo Verde'],['Arabia Saudita','Uruguay'],
+  ['Francia','Senegal'],['Noruega','Irak'],['Argentina','Argelia'],['Austria','Jordania'],
+  ['Portugal','RD Congo'],['Uzbekistán','Colombia'],['Inglaterra','Croacia'],['Ghana','Panamá'],
+  ['México','Corea del Sur'],['Sudáfrica','Chequia'],['Canadá','Qatar'],['Bosnia y Herzegovina','Suiza'],
+  ['Brasil','Haití'],['Marruecos','Escocia'],['Estados Unidos','Australia'],['Paraguay','Turquía'],
+  ['Alemania','Costa de Marfil'],['Curazao','Ecuador'],['Países Bajos','Suecia'],['Japón','Túnez'],
+  ['Bélgica','Irán'],['Egipto','Nueva Zelanda'],['España','Arabia Saudita'],['Cabo Verde','Uruguay'],
+  ['Francia','Noruega'],['Senegal','Irak'],['Argentina','Austria'],['Argelia','Jordania'],
+  ['Portugal','Uzbekistán'],['RD Congo','Colombia'],['Inglaterra','Ghana'],['Croacia','Panamá'],
+  ['México','Chequia'],['Sudáfrica','Corea del Sur'],['Canadá','Suiza'],['Bosnia y Herzegovina','Qatar'],
+  ['Brasil','Escocia'],['Marruecos','Haití'],['Estados Unidos','Turquía'],['Paraguay','Australia'],
+  ['Alemania','Ecuador'],['Curazao','Costa de Marfil'],['Países Bajos','Túnez'],['Japón','Suecia'],
+  ['Bélgica','Nueva Zelanda'],['Egipto','Irán'],['España','Uruguay'],['Cabo Verde','Arabia Saudita'],
+  ['Francia','Irak'],['Senegal','Noruega'],['Argentina','Jordania'],['Argelia','Austria'],
+  ['Portugal','Colombia'],['RD Congo','Uzbekistán'],['Inglaterra','Panamá'],['Croacia','Ghana']
+];
+
+function loadState(){try{return JSON.parse(localStorage.getItem('quiniela-tinas')||'{}');}catch(e){return {};}}
+function saveState(s){localStorage.setItem('quiniela-tinas',JSON.stringify(s));}
+function getState(){const s=loadState();if(!s.users)s.users={};if(!s.results)s.results={};if(!s.picks)s.picks={};return s;}
+
+let currentUser=null,isAdmin=false;
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function doLogin(){
+  const name=document.getElementById('login-name').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const s=getState();
+  if(!name||!pass){document.getElementById('login-err').textContent='Completa todos los campos.';return;}
+  if(!s.users[name]){document.getElementById('login-err').textContent='Usuario no encontrado. ¿Ya te registraste?';return;}
+  if(s.users[name].pass!==pass){document.getElementById('login-err').textContent='Contraseña incorrecta.';return;}
+  document.getElementById('login-err').textContent='';
+  currentUser=name;isAdmin=false;enterUser();
+}
+
+function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  const pass2=document.getElementById('reg-pass2').value;
+  if(!name||!pass){document.getElementById('reg-err').textContent='Completa todos los campos.';return;}
+  if(pass!==pass2){document.getElementById('reg-err').textContent='Las contraseñas no coinciden.';return;}
+  const s=getState();
+  if(s.users[name]){document.getElementById('reg-err').textContent='Ese nombre ya está registrado.';return;}
+  s.users[name]={pass};if(!s.picks[name])s.picks[name]={};
+  saveState(s);currentUser=name;isAdmin=false;
+  document.getElementById('reg-err').textContent='';enterUser();
+}
+
+function doAdminLogin(){
+  const pass=document.getElementById('admin-pass').value;
+  if(pass!==ADMIN_PASS){document.getElementById('admin-err').textContent='Contraseña incorrecta.';return;}
+  document.getElementById('admin-err').textContent='';
+  isAdmin=true;currentUser=null;enterAdmin();
+}
+
+function doLogout(){currentUser=null;isAdmin=false;show('screen-login');document.getElementById('login-name').value='';document.getElementById('login-pass').value='';}
+
+function enterUser(){document.getElementById('user-welcome').textContent=currentUser;renderUserPicks();userTab('picks');show('screen-user');}
+function enterAdmin(){renderAdminResults();adminTab('results');show('screen-admin');}
+
+function userTab(tab){
+  ['picks','puntos','ranking'].forEach((t,i)=>{
+    document.getElementById('user-tab-'+t).style.display=t===tab?'block':'none';
+    document.querySelectorAll('#screen-user .tab')[i].classList.toggle('active',t===tab);
+  });
+  if(tab==='puntos')renderUserPuntos();
+  if(tab==='ranking')renderRanking('user-ranking-content',false);
+}
+
+function adminTab(tab){
+  ['results','participants','ranking'].forEach((t,i)=>{
+    document.getElementById('admin-tab-'+t).style.display=t===tab?'block':'none';
+    document.querySelectorAll('#screen-admin .tab')[i].classList.toggle('active',t===tab);
+  });
+  if(tab==='participants')renderAdminParticipants();
+  if(tab==='ranking')renderRanking('admin-ranking-content',true);
+}
+
+// ── LABEL HELPER ──
+function pickLabel(p){return p==='L'?'LOCAL':p==='E'?'EMPATE':'VISITA';}
+function noPick(){return `<span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;">—</span>`;}
+
+// ── USER PICKS ──
+function isLocked(){
+  const s=getState();
+  return !!(s.users[currentUser]&&s.users[currentUser].submitted);
+}
+
+function renderUserPicks(){
+  const s=getState();
+  const myPicks=s.picks[currentUser]||{};
+  const results=s.results||{};
+  const locked=isLocked();
+  let html=`<div class="panel">`;
+  if(locked)html+=`<div class="locked-notice">🔒 Ya guardaste tus picks — no es posible modificarlos</div>`;
+  MATCHES.forEach((m,gi)=>{
+    const pick=myPicks[gi];
+    const result=results[gi];
+    let right='';
+    if(locked){
+      right+=pick?`<span class="pill pill-${pick}">${pickLabel(pick)}</span>`:noPick();
+      if(result&&pick)right+=pick===result?` <span class="pill pill-ok">✓</span>`:`<span class="pill pill-miss">✗</span>`;
+    }else{
+      right=`<div class="bet-btns">
+        <button class="bet-btn${pick==='L'?' sel-L':''}" onclick="setPick(${gi},'L')">L</button>
+        <button class="bet-btn${pick==='E'?' sel-E':''}" onclick="setPick(${gi},'E')">E</button>
+        <button class="bet-btn${pick==='V'?' sel-V':''}" onclick="setPick(${gi},'V')">V</button>
+      </div>`;
+    }
+    html+=`<div class="match-row"><span class="t-local">${m[0]}</span><span class="t-vs">vs</span><span class="t-visit">${m[1]}</span><div class="result-display">${right}</div></div>`;
+  });
+  if(!locked)html+=`<button class="btn btn-verde btn-full" onclick="saveUserPicks()">▶ Guardar y confirmar picks</button><div class="saved-msg" id="save-msg"></div>`;
+  html+=`</div>`;
+  document.getElementById('user-picks-content').innerHTML=html;
+}
+
+function setPick(gi,val){
+  if(isLocked())return;
+  const s=getState();
+  if(!s.picks[currentUser])s.picks[currentUser]={};
+  if(s.picks[currentUser][gi]===val)delete s.picks[currentUser][gi];
+  else s.picks[currentUser][gi]=val;
+  saveState(s);renderUserPicks();
+}
+
+function saveUserPicks(){
+  if(!confirm('¿Confirmas tus picks? Una vez guardados ya NO podrás modificarlos.'))return;
+  const s=getState();
+  if(!s.users[currentUser])s.users[currentUser]={};
+  s.users[currentUser].submitted=true;
+  saveState(s);
+  renderUserPicks();
+  const el=document.getElementById('save-msg');
+  if(el)el.textContent='✓ Picks confirmados y bloqueados';
+}
+
+// ── POINTS ──
+function calcPoints(user){
+  const s=getState();
+  const results=s.results||{};
+  const picks=(s.picks[user])||{};
+  let total=0;
+  Object.keys(results).forEach(gi=>{if(picks[gi]&&picks[gi]===results[gi])total++;});
+  return total;
+}
+
+function countPicks(user){
+  const s=getState();
+  return Object.keys((s.picks[user])||{}).length;
+}
+
+function rankPosition(user){
+  const s=getState();
+  const scores=Object.keys(s.users).map(u=>({u,pts:calcPoints(u)}));
+  scores.sort((a,b)=>b.pts-a.pts);
+  const pos=scores.findIndex(x=>x.u===user);
+  return pos===-1?'—':'#'+(pos+1);
+}
+
+function renderUserPuntos(){
+  const total=calcPoints(currentUser);
+  let html=`<div class="stats-grid">
+    <div class="stat-box"><div class="stat-val">${total}</div><div class="stat-lbl">Puntos</div></div>
+    <div class="stat-box"><div class="stat-val">${countPicks(currentUser)}</div><div class="stat-lbl">Picks</div></div>
+    <div class="stat-box"><div class="stat-val">${rankPosition(currentUser)}</div><div class="stat-lbl">Posición</div></div>
+  </div>`;
+  const s=getState();
+  const results=s.results||{};
+  const picks=s.picks[currentUser]||{};
+  if(!Object.keys(results).length){
+    html+=`<div class="panel" style="color:#4a6a35;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;">Sin resultados publicados aún.</div>`;
+  }else{
+    html+=`<div class="panel">`;
+    MATCHES.forEach((m,gi)=>{
+      const r=results[gi],p=picks[gi];
+      if(r===undefined)return;
+      const hit=p&&p===r;
+      html+=`<div class="match-row"><span class="t-local">${m[0]}</span><span class="t-vs">vs</span><span class="t-visit">${m[1]}</span><div class="result-display">
+        <span class="pill pill-${r}">${pickLabel(r)}</span>
+        ${p?`<span class="pill ${hit?'pill-ok':'pill-miss'}">${p}</span>`:noPick()}
+      </div></div>`;
+    });
+    html+=`</div>`;
+  }
+  document.getElementById('user-puntos-content').innerHTML=html;
+}
+
+// ── RANKING ──
+function renderRanking(containerId,admin){
+  const s=getState();
+  const scores=Object.keys(s.users).map(u=>({u,pts:calcPoints(u),picks:countPicks(u)}));
+  scores.sort((a,b)=>b.pts-a.pts||b.picks-a.picks);
+  const medals=['🥇','🥈','🥉'];
+  let html=`<div class="panel">`;
+  if(!scores.length)html+=`<div style="color:#4a6a35;font-family:'Share Tech Mono',monospace;font-size:13px;">Sin participantes aún.</div>`;
+  scores.forEach((sc,i)=>{
+    const isMe=!admin&&sc.u===currentUser;
+    html+=`<div class="rank-row${isMe?' rank-me':''}">
+      <span class="rank-pos">${medals[i]||i+1}</span>
+      <span class="rank-name">${sc.u}${isMe?' <span style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--verde-claro);">(tú)</span>':''}</span>
+      <span class="rank-pts">${sc.pts} pts</span>
+    </div>`;
+  });
+  html+=`</div>`;
+  document.getElementById(containerId).innerHTML=html;
+}
+
+// ── ADMIN RESULTS ──
+function renderAdminResults(){
+  const s=getState();
+  const results=s.results||{};
+  let html=`<div class="panel">`;
+  MATCHES.forEach((m,gi)=>{
+    const r=results[gi];
+    html+=`<div class="match-row"><span class="t-local">${m[0]}</span><span class="t-vs">vs</span><span class="t-visit">${m[1]}</span><div class="bet-btns">
+      <button class="bet-btn${r==='L'?' sel-L':''}" onclick="setResult(${gi},'L')">L</button>
+      <button class="bet-btn${r==='E'?' sel-E':''}" onclick="setResult(${gi},'E')">E</button>
+      <button class="bet-btn${r==='V'?' sel-V':''}" onclick="setResult(${gi},'V')">V</button>
+    </div></div>`;
+  });
+  html+=`<button class="btn btn-verde btn-full" onclick="saveAdminResults()">▶ Guardar resultados</button>`;
+  html+=`<div class="saved-msg" id="admin-save-msg"></div></div>`;
+  document.getElementById('admin-results-content').innerHTML=html;
+}
+
+function setResult(gi,val){
+  const s=getState();
+  if(!s.results)s.results={};
+  if(s.results[gi]===val)delete s.results[gi];
+  else s.results[gi]=val;
+  saveState(s);renderAdminResults();
+}
+
+function saveAdminResults(){
+  const el=document.getElementById('admin-save-msg');
+  if(el){el.textContent='✓ Resultados guardados';setTimeout(()=>{if(el)el.textContent='';},2500);}
+}
+
+// ── ADMIN PARTICIPANTS ──
+function renderAdminParticipants(){
+  const s=getState();
+  const users=Object.keys(s.users);
+  const results=s.results||{};
+  let html=`<div class="panel"><div class="panel-title">${users.length} Participantes</div>`;
+  if(!users.length)html+=`<div style="color:#4a6a35;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;">Sin participantes aún.</div>`;
+  users.forEach(u=>{
+    const pts=calcPoints(u);
+    const picks=s.picks[u]||{};
+    const pickCount=Object.keys(picks).length;
+    const submitted=!!(s.users[u]&&s.users[u].submitted);
+    const statusPill=submitted
+      ?`<span class="pill pill-ok" style="font-size:10px;">CONFIRMADO</span>`
+      :`<span class="pill pill-miss" style="font-size:10px;">PENDIENTE</span>`;
+    html+=`<div style="border-bottom:1px solid rgba(58,107,26,0.2);padding-bottom:8px;margin-bottom:8px;">
+      <div class="part-row" style="border:none;padding-bottom:0;margin-bottom:0;">
+        <span class="part-name">${u}</span>
+        <span class="part-info">${pickCount}/72 · ${pts} pts</span>
+        ${statusPill}
+        <button class="user-toggle" id="toggle-${CSS.escape(u)}" onclick="toggleUserPicks('${u.replace(/'/g,"\\'")}')">ver picks ▾</button>
+        <button class="btn btn-rojo btn-sm" onclick="deleteUser('${u.replace(/'/g,"\\'")}')">Eliminar</button>
+      </div>
+      <div class="picks-detail" id="detail-${CSS.escape(u)}">`;
+    MATCHES.forEach((m,gi)=>{
+      const p=picks[gi];
+      const r=results[gi];
+      const hit=p&&r&&p===r;
+      const miss=p&&r&&p!==r;
+      html+=`<div class="match-row"><span class="t-local" style="font-size:12px;">${m[0]}</span><span class="t-vs">vs</span><span class="t-visit" style="font-size:12px;">${m[1]}</span><div class="result-display">
+        ${p?`<span class="pill pill-${p}" style="font-size:10px;">${p}</span>`:noPick()}
+        ${hit?'<span class="pill pill-ok" style="font-size:10px;">✓</span>':miss?'<span class="pill pill-miss" style="font-size:10px;">✗</span>':''}
+      </div></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  html+=`</div>`;
+  document.getElementById('admin-participants-content').innerHTML=html;
+}
+
+function toggleUserPicks(u){
+  const detail=document.getElementById('detail-'+CSS.escape(u));
+  const btn=document.getElementById('toggle-'+CSS.escape(u));
+  if(!detail||!btn)return;
+  const open=detail.classList.toggle('open');
+  btn.textContent=open?'ocultar ▴':'ver picks ▾';
+  btn.classList.toggle('open',open);
+}
+
+function deleteUser(name){
+  if(!confirm('¿Eliminar a '+name+'? Esta acción no se puede deshacer.'))return;
+  const s=getState();
+  delete s.users[name];delete s.picks[name];
+  saveState(s);renderAdminParticipants();
+}
+
+// Enter key
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const active=document.querySelector('.screen.active');
+    if(active.id==='screen-login')doLogin();
+    if(active.id==='screen-register')doRegister();
+    if(active.id==='screen-admin-login')doAdminLogin();
+  }
+});
+</script>
+</body>
+</html>
